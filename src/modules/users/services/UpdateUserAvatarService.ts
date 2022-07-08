@@ -8,13 +8,12 @@ import fs from 'fs';
 
 interface IRequest {
   userId: string;
-  avatarFilename: 'string';
+  avatarFilename: string | undefined;
 }
 
 class UpdateUserAvatarService {
   public async execute({ userId, avatarFilename }: IRequest): Promise<User> {
-    const usersRepository = getCustomRepository(UsersRepository);
-
+    const usersRepository = await getCustomRepository(UsersRepository);
     const user = await usersRepository.findById(userId);
 
     if (!user) {
@@ -29,7 +28,7 @@ class UpdateUserAvatarService {
       }
     }
 
-    user.avatar = avatarFilename;
+    user.avatar = avatarFilename as string;
 
     await usersRepository.save(user);
     return user;
